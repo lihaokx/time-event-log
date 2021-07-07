@@ -1,24 +1,26 @@
-import logo from './logo.svg';
+ 
 import './App.css';
+import  Header from "./component/Header.js";
+import EventRow from './component/EventRow';
+import DateComponent from './component/DateComponent';
+import { Provider } from 'react-redux';
+import  {ConfigureStore} from './reduxReducer/configureStore';
 
+const store = ConfigureStore();
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <div className="App-header">
+          <div className="container">
+            <DateComponent />
+            <br></br>
+            <Header/>
+            <EventRow/>
+          </div>
+        </div>
+      </div>
+    </Provider>
   );
 }
 
