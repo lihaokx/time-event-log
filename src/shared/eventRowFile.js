@@ -18,8 +18,8 @@ export const RowOfEvent =
     },
     {
         id: 2,
-        start: "09:00",
-        stop: "09:10",
+        start: "10:00",
+        stop: "11:10",
         event: "Learn English",
         period: "00:10",
         importance: -1

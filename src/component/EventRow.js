@@ -2,7 +2,7 @@ import {RowOfEvent} from '../shared/eventRowFile';
 import { addEventCreator } from '../reduxReducer/actionCreators';
 import { connect } from 'react-redux';
 import {   Col , Row} from 'reactstrap';
-import { Control, LocalForm } from 'react-redux-form';
+import { Control,Form, LocalForm } from 'react-redux-form';
 
 const mapStateToProps = state => {
     return {
@@ -37,53 +37,67 @@ const EventRow = (props ) => {
     console.log("props: ", props)
     console.log("RowOfEvent: ", RowOfEvent)
 
-    function handleClick() {
-        // console.log('Current State is: ' + JSON.stringify(values));
+    function handleClick(values) {
+        console.log('values: ', values);
         // alert('Current State is: ' + JSON.stringify(values));
+ 
         props.addEvent( );
         // event.preventDefault();
     }
+    var element =props.rows[0];
     return ( 
         <div>
-            <LocalForm  >
-                {props.rows.map(element => (                    
-                        <div  key={element.id}>                            
-                            <Col >
-                                <Control.input   type="time"  model=".start" id="start" name="start" defaultValue={element.start}
-                                    className="form-control"
-                                />
-                            </Col>
-                            
+                {props.rows.map(element => (  
+                        <LocalForm  key={element.id}>  
+                           {/* <LocalForm  onSubmit ={(values) => handleClick(values) } >  */}
+                         <Row className="form-group">                                              
+                                <Col  md={4}>
+                                    <Row >
+                                        <Col  md={4}>
+                                            <Control.input   type="time"  model=".start"  id="start" name="start" defaultValue={element.start}
+                                                className="form-control"  />
+                                        </Col>
+                                        <Col   md={4}>
+                                            <Control.input   type="time"  model=".stop" id="stop" name="stop" defaultValue={element.stop}
+                                                className="form-control"  />
+                                        </Col>
+                                        <Col md={4}>
+                                                <Control.input  type="time"  model=".period" id="period" name="period" defaultValue={element.period}
+                                                    className="form-control"  />
+                                        </Col>
+                                    </Row>
+                                </Col>
 
-                            <div className="col-xs-12 col-md-1">
-                                <input type="time"  id="start" name="start" defaultValue={element.start} />
-                            </div>
-                            <div className="col-xs-12 col-md-1">
-                                <input type="time" id="stop" name="stop" defaultValue={element.stop} />
-                            </div>
-                            <div className="col-xs-12 col-md-8">
-                                <input type="text" id="event" name="event"  size="65" defaultValue={element.event}/>
-                            </div>
+                                <Col md={7}>
+                                        <Control.input   type="text"  model=".event" id="event" name="event"  size="65" defaultValue={element.event}
+                                            className="form-control"  />
+                                    </Col>
 
-                            <div className="col-xs-12 col-md-1">
-                                {/* diff(document.getElementById("start").value , document.getElementById("stop").value) */}
-                                <input type="time" id="period" name="period"  defaultValue={ diff( element.start, element.stop)}/>
-                            </div>
-                            <div className="col-xs-12 col-md-1">
-                                <select name="importance" id="importance"   >
-                                    <option value="-1 ">-1</option>
-                                    <option value="0  ">0</option>
-                                    <option value="1  ">1</option>
-                                </select>
-                            </div>
-                        </div>
-               ))}
-            </LocalForm>
-
-            <button onClick = {() => handleClick()}>
+                                <Col  md={1}>
+                                    <Row >
+                                        <Col md={5}>
+                                            <Control.select   model=".importance" id="importance" name="importance" defaultValue={element.importance}
+                                                className="form-control"  >
+                                                <option value="-1 ">-1</option>
+                                                <option value="0  ">0</option>
+                                                <option value="1  ">1</option>
+                                            </Control.select>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                             </Row>  
+                             </LocalForm  > 
+                ))}
+                             
+            <button type="submit" color="primary" onClick ={(values) => handleClick(values) }>
                 Add
             </button>
+                             
+ 
+            
 
+            
+            
         </div>
         
      );
