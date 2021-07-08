@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/time-event-log/static/css/main.7cb62d4f.chunk.css",
+    "main.js": "/time-event-log/static/js/main.29c29e6d.chunk.js",
+    "main.js.map": "/time-event-log/static/js/main.29c29e6d.chunk.js.map",
+    "runtime-main.js": "/time-event-log/static/js/runtime-main.35d2d16a.js",
+    "runtime-main.js.map": "/time-event-log/static/js/runtime-main.35d2d16a.js.map",
+    "static/css/2.82ef7aa4.chunk.css": "/time-event-log/static/css/2.82ef7aa4.chunk.css",
+    "static/js/2.d778c8b4.chunk.js": "/time-event-log/static/js/2.d778c8b4.chunk.js",
+    "static/js/2.d778c8b4.chunk.js.map": "/time-event-log/static/js/2.d778c8b4.chunk.js.map",
+    "static/js/3.8635bb73.chunk.js": "/time-event-log/static/js/3.8635bb73.chunk.js",
+    "static/js/3.8635bb73.chunk.js.map": "/time-event-log/static/js/3.8635bb73.chunk.js.map",
+    "index.html": "/time-event-log/index.html",
+    "static/css/2.82ef7aa4.chunk.css.map": "/time-event-log/static/css/2.82ef7aa4.chunk.css.map",
+    "static/css/main.7cb62d4f.chunk.css.map": "/time-event-log/static/css/main.7cb62d4f.chunk.css.map",
+    "static/js/2.d778c8b4.chunk.js.LICENSE.txt": "/time-event-log/static/js/2.d778c8b4.chunk.js.LICENSE.txt",
+    "static/media/font-awesome.css": "/time-event-log/static/media/fontawesome-webfont.f691f37e.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.35d2d16a.js",
+    "static/css/2.82ef7aa4.chunk.css",
+    "static/js/2.d778c8b4.chunk.js",
+    "static/css/main.7cb62d4f.chunk.css",
+    "static/js/main.29c29e6d.chunk.js"
+  ]
+}
