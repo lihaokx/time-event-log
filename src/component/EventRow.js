@@ -101,7 +101,7 @@ const EventRow = (props ) => {
                                 <Col  md={1}>
                                     <Row >
                                         <Col md={5}>
-                                            <Control.select   model=".importance" id="importance" name="importance" value={element.importance}   className="form-control"  >
+                                            <Control.select   model=".importance" id="importance" name="importance" defaultValue={element.importance}   className="form-control"  >
                                                 <option value="-1 ">-1</option>
                                                 <option value="0  ">0</option>
                                                 <option value="1  ">1</option>

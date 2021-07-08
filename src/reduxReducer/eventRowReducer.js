@@ -24,7 +24,7 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
             var rows = state;
             var newRow = action.payload;
             var today = new Date();
-            var hour = today.getHours() + ":" ;
+            var hour = (today.getHours()<10?'0':'') + today.getHours() + ":" ;
             var min = (today.getMinutes()<10?'0':'') + today.getMinutes();
             var time = hour+min;
             console.log("min time: ", today.getMinutes()<10?'0':''  );            
@@ -36,39 +36,39 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
             return rows.concat(newRow);        
             
         case "addStartValue" :
-            let array = state;
-            let array2 = array.map(a => {
-                let returnValue = {...a};
+            var array0 = state;
+            var array20 = array0.map(a => {
+                var returnValue0 = {...a};
               if (a.id === action.payload.keyId) {
-                returnValue.start = action.payload.start.value;
-                returnValue.period = diff(action.payload.start.value, returnValue.stop);
+                returnValue0.start = action.payload.start.value;
+                returnValue0.period = diff(action.payload.start.value, returnValue0.stop);
               }
-              return returnValue;
+              return returnValue0;
             })
-            return array2;
+            return array20;
 
         case  "addStopValue":
-            let array = state;
-            let array2 = array.map(a => {
-                let returnValue = {...a};
+            var array1 = state;
+            var array21 = array1.map(a => {
+                var returnValue1 = {...a};
               if (a.id === action.payload.keyId) {
-                returnValue.stop = action.payload.stop.value;
-                returnValue.period = diff(returnValue.start, action.payload.stop.value);
+                returnValue1.stop = action.payload.stop.value;
+                returnValue1.period = diff(returnValue1.start, action.payload.stop.value);
               }
-              return returnValue;
+              return returnValue1;
             })
-            return array2;
+            return array21;
 
         case  "addEventValue":
-            let array = state;
-            let array2 = array.map(a => {
-                let returnValue = {...a};
+            var array2 = state;
+            var array22 = array2.map(a => {
+                var returnValue2 = {...a};
                 if (a.id === action.payload.keyId ) {
-                returnValue.event = action.payload.event.value;
+                returnValue2.event = action.payload.event.value;
                 }
-                return returnValue;
+                return returnValue2;
             })
-            return array2;
+            return array22;
 
         default:
             return state;

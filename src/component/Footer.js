@@ -9,7 +9,7 @@ function Footer() {
             <div className="row  justify-content-center">  
                 <div className="row row-header  justify-content-center "> 
                     <div className="col-xs-12 col-md">                     
-                            <a className="row  justify-content-center"   href="http://www.linkedin.com/in/">
+                            <a className="row  justify-content-center"   href="https://www.linkedin.com/in/hao-li-654568176/">
                                 <div className="col-xs-5 col-md-2 ">
                                     <i className=" fa fa-linkedin  fa-3x"></i>                
                                 </div>
