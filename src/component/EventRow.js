@@ -94,7 +94,7 @@ const EventRow = (props ) => {
                                 </Col>
 
                                 <Col md={7}>
-                                        <Control.input   type="text"  model=".event" id="event" name="event"  size="65" value={element.event}
+                                        <Control.input   type="text"  model=".event" id="event" name="event"  size="65" placeholder="Things you have done" value={element.event}
                                             className="form-control" onChange={ handleInputChange(element.id)}/>
                                     </Col>
 
