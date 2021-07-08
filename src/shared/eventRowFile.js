@@ -7,22 +7,22 @@ export const RowOfEvent =
         event: "learn redux and react",
         period: "01:00",
         importance: 1
-    },
-    {
-        id: 1,
-        start: "09:00",
-        stop: "09:10",
-        event: "Take a break",
-        period: "00:10",
-        importance: -1
-    },
-    {
-        id: 2,
-        start: "10:00",
-        stop: "11:10",
-        event: "Learn English",
-        period: "00:10",
-        importance: -1
-    },
+    }
+    // {
+    //     id: 1,
+    //     start: "09:00",
+    //     stop: "09:10",
+    //     event: "Take a break",
+    //     period: "00:10",
+    //     importance: -1
+    // },
+    // {
+    //     id: 2,
+    //     start: "10:00",
+    //     stop: "11:10",
+    //     event: "Learn English",
+    //     period: "00:10",
+    //     importance: -1
+    // },
     
 ]

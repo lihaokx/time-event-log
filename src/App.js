@@ -5,6 +5,7 @@ import EventRow from './component/EventRow';
 import DateComponent from './component/DateComponent';
 import { Provider } from 'react-redux';
 import  {ConfigureStore} from './reduxReducer/configureStore';
+import Footer from "./component/Footer";
 
 const store = ConfigureStore();
 function App() {
@@ -17,8 +18,10 @@ function App() {
             <br></br>
             <Header/>
             <EventRow/>
+            
           </div>
         </div>
+        <Footer/>
       </div>
     </Provider>
   );

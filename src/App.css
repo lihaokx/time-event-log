@@ -43,3 +43,31 @@
  input[type="time"]::-webkit-calendar-picker-indicator{
   filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%);
 }
+
+#stop, #start, #period, #event, #importance  {font-weight:bold;}
+ 
+
+.jumbotron {
+  padding:70px 30px 70px 30px;
+  margin:0px auto;
+  background: #f1d5f6 ;
+  color:floralwhite;
+}
+
+a{ text-decoration:none;
+  color:black;
+}
+
+.top-buffer { margin-top:50px; }
+
+.form-top-buffer { margin-top:15px; }
+
+.btn-top{margin-top:15px;
+  margin-bottom:50px;
+  font-weight:bold;
+}
+
+.header-top{margin-top:50px;}
+
+.dateInput{margin-top:20px;}
+
