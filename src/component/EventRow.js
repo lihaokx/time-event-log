@@ -1,12 +1,15 @@
  
-import { addEventCreator, addStopValue, addStartValue, addEventValue } from '../reduxReducer/actionCreators';
+import { addEventCreator, addStopValue, addStartValue, saveRows, addEventValue , addImportanceValue, changeDashBoard} from '../reduxReducer/actionCreators';
 import { connect } from 'react-redux';
-import {   Col , Row, Button} from 'reactstrap';
+import { Col , Row, Button,  Card, CardBody, CardHeader, Media } from 'reactstrap';
+
 import { Control, LocalForm } from 'react-redux-form';
+import { useEffect} from 'react';
 
 const mapStateToProps = state => {
     return {
-      rows: state
+      rows: state.rows,
+      dashBoard: state.dashBoard
     }
   }
 
@@ -14,7 +17,10 @@ const mapDispatchToProps = dispatch => ({
     addEventRow: () => { dispatch(addEventCreator())},
     addStop: (value, keyId)=> {dispatch(addStopValue(value, keyId))},
     addStart: (value, keyId)=> {dispatch(addStartValue(value, keyId))},
-    addEvent: (value, keyId)=> {dispatch(addEventValue(value, keyId))}
+    addEvent: (value, keyId)=> {dispatch(addEventValue(value, keyId))},
+    addImportance: (value, keyId)=> {dispatch(addImportanceValue(value, keyId))},
+    changeDashBoard: (dashboardValue) => {dispatch(changeDashBoard(dashboardValue))},
+    saveRows: (rows) => {dispatch(saveRows(rows))}
   });
   
 function diff(start, end) {
@@ -34,6 +40,8 @@ function diff(start, end) {
 }
 // console.log("diff: ", diff(" 00", "7:20"));
 
+
+
 const EventRow = (props ) => {
     console.log("props: ", props)
     // console.log("RowOfEvent: ", RowOfEvent)
@@ -45,13 +53,88 @@ const EventRow = (props ) => {
         // event.preventDefault();
     }
 
+    function handleSave(){
+        props.saveRows(props.rows);
+    }
+
+    async function dashFunction(rows) {
+        var importanceP1 = [0,0];
+        var importanceN1 = [0,0];
+        var importance0 =  [0,0];
+        var total =[0,0];
+    
+        for(const row of rows){
+            if (row.period != ""){
+            switch(row.importance){
+                case 0 :
+                    console.log("row.period: ", row.period);
+                    importance0[0] = importance0[0] +parseInt(row.period.split(":")[0] );
+                    importance0[1] = importance0[1] +parseInt(row.period.split(":")[1]);
+                    importance0[0] = importance0[0] + Math.floor(importance0[1]/60);
+                    importance0[1] = importance0[1]%60;
+                    console.log("row.id: ", row.id, "importance0: ", importance0)
+                    continue;
+            
+                case -1:
+                    console.log("row.period: ", row.period);
+                    importanceN1[0] = importanceN1[0] +parseInt(row.period.split(":")[0] );
+                    importanceN1[1] = importanceN1[1] +parseInt(row.period.split(":")[1]);
+                    importanceN1[0] = importanceN1[0] + Math.floor(importanceN1[1]/60);
+                    importanceN1[1] = importanceN1[1]%60;
+                    console.log("row.id: ", row.id, "importanceN1: ", importanceN1)
+                    continue;
+
+                case 1:
+                    console.log("row.period: ", row.period);
+                    importanceP1[0] = importanceP1[0] +parseInt(row.period.split(":")[0] );
+                    importanceP1[1] = importanceP1[1] +parseInt(row.period.split(":")[1]);
+                    importanceP1[0] = importanceP1[0] + Math.floor(importanceP1[1]/60);
+                    importanceP1[1] = importanceP1[1]%60;
+                    console.log("row.id: ", row.id, "importanceP1: ", importanceP1)
+                    continue;
+                 }
+            }
+
+        }
+        total[0] = importanceP1[0] + importanceN1[0] + importance0[0];
+        total[1] = importanceP1[1] + importanceN1[1] + importance0[1];
+        total[0] = total[0] + Math.floor(total[1]/60);
+        total[1] = total[1]%60;
+        console.log("total: ", total);
+        var dashboardValue ={
+            importanceP1: (importanceP1[0] < 9 ? "0" : "") + importanceP1[0] + ":" + (importanceP1[1] < 9 ? "0" : "") + importanceP1[1],
+            importanceN1: (importanceN1[0] < 9 ? "0" : "") + importanceN1[0] + ":" + (importanceN1[1] < 9 ? "0" : "") + importanceN1[1],
+            importance0: (importance0[0] < 9 ? "0" : "") + importance0[0] + ":" + (importance0[1] < 9 ? "0" : "") + importance0[1],
+            total: (total[0] < 9 ? "0" : "") + total[0] + ":" + (total[1] < 9 ? "0" : "") + total[1],
+        }
+        console.log("dashboardValue: ", dashboardValue);
+        return dashboardValue;
+    }
+
+    // when row.imporatance change, it will change the dashboard function
+    // can not put object(array) in the [] of useEffect 
+    // the size of dependency can not change. Thus, use join method to join them as a single string
+    useEffect(() => {
+        dashFunction(props.rows)
+        .then((dashboardValue) => props.changeDashBoard(dashboardValue))
+        console.log("props.rows: ", props.rows);
+    }, [[...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(",")])
+
+    
+    // useEffect(()=>{
+        
+    // }, [...props.rows.map(row => row.stop)] )
+    
+    console.log("props.rows.map(row => row.period)]: ", [...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(","));
+
     const  handleInputChange = (keyId) =>(event) =>{
         const target = event.target;
         // const value = target.type === 'select' ? target.checked : target.value;
         const value = target.value
         const name = target.name;
         console.log("name: ", name)
-
+        console.log("value: ", value)
+        console.log("keyId: ", keyId)
         switch (name){
             case  "start"  :
                 props.addStart(value, keyId); 
@@ -63,12 +146,22 @@ const EventRow = (props ) => {
                 // console.log("event value: ", value);
                 props.addEvent(value, keyId);  
                 break;
- 
+            case "importance" :
+                console.log("event value: ", value);
+                var valueInt=parseInt(value);
+               
+                props.addImportance(valueInt, keyId);                    
+
+                break;
+            // case "period" :
+            //     // console.log("event value: ", value);
+            //     props.addEvent(value, keyId);  
+            //     break;
             default:
                 return null;
         }
     }
- 
+
     return ( 
         <div>
                 {props.rows.map(element => (  
@@ -88,7 +181,7 @@ const EventRow = (props ) => {
                                         <Col md={4}>
                                             {/* <p  className="form-control"> <b>{diff(element.start, element.stop) }</b> </p> */}
                                                 <Control.input  type="text"  model=".period" id="period" name="period" value= {diff(element.start, element.stop) }
-                                                    className="form-control"   />
+                                                    className="form-control" onChange={ handleInputChange(element.id)}  />
                                         </Col>
                                     </Row>
                                 </Col>
@@ -101,10 +194,11 @@ const EventRow = (props ) => {
                                 <Col  md={1}>
                                     <Row >
                                         <Col md={5}>
-                                            <Control.select   model=".importance" id="importance" name="importance" defaultValue={element.importance}   className="form-control"  >
-                                                <option value="-1 ">-1</option>
-                                                <option value="0  ">0</option>
-                                                <option value="1  ">1</option>
+                                            <Control.select   model=".importance" id="importance" name="importance" defaultValue={element.importance}   className="form-control"
+                                             onChange={ handleInputChange(element.id)} >
+                                                <option value={-1}>-1</option>
+                                                <option value={0}>0</option>
+                                                <option value={1}>1</option>
                                             </Control.select>
                                         </Col>
                                     </Row>
@@ -112,11 +206,33 @@ const EventRow = (props ) => {
                              </Row>  
                              </LocalForm  > 
                 ))}
-                             
-            <Button className="btn-top" type="submit" color="secondary" onClick ={(values) => handleClick(values) }>
-                 Add a new event
-            </Button>
-            
+
+            <div className ="row bottomBtn">
+
+                <Button className="btn-top col-md-2 offset-md-5" type="submit" color="secondary" onClick ={(values) => handleClick(values) }>
+                    Add a new event
+                </Button>
+                <Button className="btn-top col-md-1 offset-md-1"   color="secondary" onClick ={() => handleSave() }>
+                    Save
+                </Button>
+            </div>
+            <Card>
+                <CardHeader className="bg-primary ">Dashboard</CardHeader>
+                <CardBody  >
+                    <dl className="row p-1 dashboardTable">
+                        <dt className="col-6"> </dt>
+                        <dd className="col-6">Time consumed</dd>
+                        <dt className="col-6">Importance of 1: </dt>
+                        <dd className="col-6 dsb">{props.dashBoard.importanceP1}</dd>
+                        <dt className="col-6">Importance of 0: </dt>
+                        <dd className="col-6 dsb">{props.dashBoard.importance0}</dd>
+                        <dt className="col-6">Importance of -1: </dt>
+                        <dd className="col-6 dsb">{props.dashBoard.importanceN1}</dd>
+                        <dt className="col-6">Total:</dt>
+                        <dd className="col-6 dsb">{props.dashBoard.total}</dd>
+                    </dl>
+                </CardBody>
+            </Card>
         </div>
         
      );

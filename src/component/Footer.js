@@ -15,7 +15,7 @@ function Footer() {
                                 </div>
                                 <div className="col-xs-5 col-md-5 ">
                                     <h4>Linkedin </h4>
-                                    <p  >Connect with me on Linkedin</p>
+                                    <p >Connect with me on Linkedin</p>
                                 </div>
                             </a>
                     </div>

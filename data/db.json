@@ -1,41 +1,19 @@
 {
-    "eventLog": [ 
-        {
-        "id": "0",
-        "date": "July 6, 2021",
-        "event": [
-            {   "id": "0" ,
-                "start": "8:00",
-                "stop": "9:00",
-                "interval": "1:00",
-                "log": "study"
-            },
-            {   "id": "1" ,
-                "start": "9:00",
-                "stop": "10:00",
-                "interval": "1:00",
-                "log": "study"
-            }
-        ]
-       },
-       {
-        "id": "1",
-        "date": "July 7, 2021",
-        "event": [
-            {   "id": "0" ,
-                "start": "8:00",
-                "stop": "9:00",
-                "interval": "1:00",
-                "log": "study"
-            },
-            {   "id": "1" ,
-                "start": "9:00",
-                "stop": "10:00",
-                "interval": "1:00",
-                "log": "study"
-            }
-        ]
-       }
-
+ 
+    "today": [
+        {   "id": "0" ,
+            "start": "8:00",
+            "stop": "9:00",
+            "interval": "1:00",
+            "log": "study",
+            "importance":1
+        },
+        {   "id": "1" ,
+            "start": "9:00",
+            "stop": "10:00",
+            "interval": "1:00",
+            "log": "study",
+            "importance":1
+        }
     ]
 }
