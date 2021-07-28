@@ -1,13 +1,13 @@
  
 import './App.css';
-import  Header from "./component/Header.js";
+ 
 import EventRow from './component/EventRow';
-import DateComponent from './component/DateComponent';
+import Header from './component/Header';
 import { Provider } from 'react-redux';
 import  {ConfigureStore} from './reduxReducer/configureStore';
 import Footer from "./component/Footer";
 import { PersistGate } from 'redux-persist/integration/react'
-
+ 
 const store = ConfigureStore().store;
 const persistor = ConfigureStore().persistor;
 function App() {
@@ -17,9 +17,9 @@ function App() {
         <div className="App">
           <div className="App-header">
             <div className="container">
-              <DateComponent />
+              <Header />
               <br></br>
-              <Header/>
+ 
               <EventRow/>
               
             </div>

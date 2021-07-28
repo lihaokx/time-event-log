@@ -1,17 +1,25 @@
  
-import { addEventCreator, addStopValue, addStartValue, saveRows, addEventValue , addImportanceValue, changeDashBoard} from '../reduxReducer/actionCreators';
+import { addEventCreator, addStopValue, addStartValue, saveRows, 
+    addEventValue , addImportanceValue, changeDashBoard, purgeState} from '../reduxReducer/actionCreators';
 import { connect } from 'react-redux';
-import { Col , Row, Button,  Card, CardBody, CardHeader, Media } from 'reactstrap';
+import { Col , Row,Form,FormGroup, Input, Button,  Card, CardBody, CardHeader, Media } from 'reactstrap';
 
 import { Control, LocalForm } from 'react-redux-form';
-import { useEffect} from 'react';
+import { useEffect, useState} from 'react';
+import  {ConfigureStore} from '../reduxReducer/configureStore';
+import checkIfDateEmpty from "../helperFunc/checkIfDateEmpty";
+import checkIfRowsEmpty from "../helperFunc/checkIfRowsEmpty";
+import dashFunction from '../helperFunc/dashFunction';
+
+const persistor = ConfigureStore().persistor;
 
 const mapStateToProps = state => {
     return {
       rows: state.rows,
       dashBoard: state.dashBoard
     }
-  }
+}
+  
 
 const mapDispatchToProps = dispatch => ({  
     addEventRow: () => { dispatch(addEventCreator())},
@@ -20,7 +28,8 @@ const mapDispatchToProps = dispatch => ({
     addEvent: (value, keyId)=> {dispatch(addEventValue(value, keyId))},
     addImportance: (value, keyId)=> {dispatch(addImportanceValue(value, keyId))},
     changeDashBoard: (dashboardValue) => {dispatch(changeDashBoard(dashboardValue))},
-    saveRows: (rows) => {dispatch(saveRows(rows))}
+    saveRows: (rows, todayDate) => {dispatch(saveRows(rows, todayDate))},
+    purgeState: () => {dispatch(purgeState())}
   });
   
 function diff(start, end) {
@@ -53,70 +62,67 @@ const EventRow = (props ) => {
         // event.preventDefault();
     }
 
-    function handleSave(){
-        props.saveRows(props.rows);
-    }
+    function handleSave(todayDate){
+        // props.saveRows(props.rows, todayDate)
 
-    async function dashFunction(rows) {
-        var importanceP1 = [0,0];
-        var importanceN1 = [0,0];
-        var importance0 =  [0,0];
-        var total =[0,0];
-    
-        for(const row of rows){
-            if (row.period != ""){
-            switch(row.importance){
-                case 0 :
-                    console.log("row.period: ", row.period);
-                    importance0[0] = importance0[0] +parseInt(row.period.split(":")[0] );
-                    importance0[1] = importance0[1] +parseInt(row.period.split(":")[1]);
-                    importance0[0] = importance0[0] + Math.floor(importance0[1]/60);
-                    importance0[1] = importance0[1]%60;
-                    console.log("row.id: ", row.id, "importance0: ", importance0)
-                    continue;
-            
-                case -1:
-                    console.log("row.period: ", row.period);
-                    importanceN1[0] = importanceN1[0] +parseInt(row.period.split(":")[0] );
-                    importanceN1[1] = importanceN1[1] +parseInt(row.period.split(":")[1]);
-                    importanceN1[0] = importanceN1[0] + Math.floor(importanceN1[1]/60);
-                    importanceN1[1] = importanceN1[1]%60;
-                    console.log("row.id: ", row.id, "importanceN1: ", importanceN1)
-                    continue;
-
-                case 1:
-                    console.log("row.period: ", row.period);
-                    importanceP1[0] = importanceP1[0] +parseInt(row.period.split(":")[0] );
-                    importanceP1[1] = importanceP1[1] +parseInt(row.period.split(":")[1]);
-                    importanceP1[0] = importanceP1[0] + Math.floor(importanceP1[1]/60);
-                    importanceP1[1] = importanceP1[1]%60;
-                    console.log("row.id: ", row.id, "importanceP1: ", importanceP1)
-                    continue;
-                 }
+        const datePromise = checkIfDateEmpty( todayDate);
+        datePromise
+        .then(() =>{return  checkIfRowsEmpty(props.rows )})
+        .then(() =>{props.saveRows(props.rows, todayDate)},
+            (err) => {console.error("Error message: ", err.message);
+            alert(err.message); 
             }
-
-        }
-        total[0] = importanceP1[0] + importanceN1[0] + importance0[0];
-        total[1] = importanceP1[1] + importanceN1[1] + importance0[1];
-        total[0] = total[0] + Math.floor(total[1]/60);
-        total[1] = total[1]%60;
-        console.log("total: ", total);
-        var dashboardValue ={
-            importanceP1: (importanceP1[0] < 9 ? "0" : "") + importanceP1[0] + ":" + (importanceP1[1] < 9 ? "0" : "") + importanceP1[1],
-            importanceN1: (importanceN1[0] < 9 ? "0" : "") + importanceN1[0] + ":" + (importanceN1[1] < 9 ? "0" : "") + importanceN1[1],
-            importance0: (importance0[0] < 9 ? "0" : "") + importance0[0] + ":" + (importance0[1] < 9 ? "0" : "") + importance0[1],
-            total: (total[0] < 9 ? "0" : "") + total[0] + ":" + (total[1] < 9 ? "0" : "") + total[1],
-        }
-        console.log("dashboardValue: ", dashboardValue);
-        return dashboardValue;
+        )
     }
+
+    function changeBackgrdColor (rows){
+        for(let i=0; i<rows.length; i++){
+            var currentId = 'a'+i.toString();
+            console.log("rows ", i, " ", rows[i])
+            var currentRow = document.getElementsByClassName(currentId);
+
+            switch (rows[i].importance){
+                case 0:
+                    for(let i=0; i<currentRow.length; i++){
+                        currentRow[i].style.backgroundColor = '#9df2f5';
+                    }
+                    continue;
+                case 1:
+                    for(let i=0; i<currentRow.length; i++){
+                        currentRow[i].style.backgroundColor = '#ff9f87';
+                    }
+                    continue;
+                case -1:
+                    for(let i=0; i<currentRow.length; i++){
+                        currentRow[i].style.backgroundColor = '#f0eef3';
+                    }
+                    continue;
+            }
+        }
+    }
+
+    function purge ()  {
+        // purge the states in local storage
+        persistor.purge()
+        .then(() => {
+            return persistor.flush()
+            })
+        // Purge the states
+        props.purgeState()
+        ;
+      }
+
+    
 
     // when row.imporatance change, it will change the dashboard function
     // can not put object(array) in the [] of useEffect 
     // the size of dependency can not change. Thus, use join method to join them as a single string
     useEffect(() => {
         dashFunction(props.rows)
-        .then((dashboardValue) => props.changeDashBoard(dashboardValue))
+        .then((dashboardValue) => {props.changeDashBoard(dashboardValue)
+            return Promise.resolve()
+        })
+        .then(( )=> changeBackgrdColor(props.rows))
         console.log("props.rows: ", props.rows);
     }, [[...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(",")])
 
@@ -126,6 +132,18 @@ const EventRow = (props ) => {
     // }, [...props.rows.map(row => row.stop)] )
     
     console.log("props.rows.map(row => row.period)]: ", [...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(","));
+    const [todayDate, setTodayDate] = useState("");
+
+    const handleDate = () => (event) =>{
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        console.log("todayDate: ", name);
+        console.log("value: ", value);
+        setTodayDate(value);  
+        console.log("todayDate: ", todayDate);    
+    }
+
 
     const  handleInputChange = (keyId) =>(event) =>{
         const target = event.target;
@@ -162,40 +180,60 @@ const EventRow = (props ) => {
         }
     }
 
+    
     return ( 
         <div>
-                {props.rows.map(element => (  
+           
+                <h4 className="mt-5">Date of Today</h4>
+                <br></br>
+                <div className="row justify-content-center">
+                    <FormGroup className="col-3">
+                        <Input type= "date" id="todayDate" name="todayDate" onChange={handleDate()}/>
+                    </FormGroup>
+                </div>
+                <div className="row justify-content-center header-top">
+
+                <div className="row  col-4 justify-content-center">
+                    <div className=" col-4 ">Start       </div>
+                    <div className=" col-4 ">Stop       </div>
+                    <div className=" col-4 ">Period       </div>
+                </div>
+                    <div className="col-7">Event      </div>
+                    <div className="col-1">Importance  </div>
+                </div>
+                {props.rows.map(element => { 
+                return(  
                         <LocalForm  key={element.id}>  
                            {/* <LocalForm  onSubmit ={(values) => handleClick(values) } >  */}
                          <Row className="form-group form-top-buffer">                                              
                                 <Col  md={4}>
                                     <Row >
                                         <Col  md={4}>
-                                            <Control.input  type="time"  model=".start"  id="start" name="start" value={element.start}
-                                                className="form-control" key={element.id}  onChange={ handleInputChange(element.id)} />
+                                            <Control.input   type="time"  model=".start"  name="start" value={element.start}
+                                                className= {"form-control rowsBold " + 'a' +element.id.toString()} key={element.id}  onChange={ handleInputChange(element.id)} />
                                         </Col>
                                         <Col   md={4}>
-                                            <Control.input   type="time"  model=".stop" id="stop" name="stop" value={element.stop}
-                                                className="form-control"  onChange={ handleInputChange(element.id)} />
+                                            <Control.input   type="time"  model=".stop"  name="stop" value={element.stop}
+                                                className={"form-control rowsBold " + 'a' +element.id.toString()} onChange={ handleInputChange(element.id)} />
                                         </Col>
                                         <Col md={4}>
                                             {/* <p  className="form-control"> <b>{diff(element.start, element.stop) }</b> </p> */}
-                                                <Control.input  type="text"  model=".period" id="period" name="period" value= {diff(element.start, element.stop) }
-                                                    className="form-control" onChange={ handleInputChange(element.id)}  />
+                                                <Control.input  type="text"  model=".period" name="period" value= {diff(element.start, element.stop) }
+                                                    className={"form-control rowsBold "  + 'a' +element.id.toString()} onChange={ handleInputChange(element.id)}  />
                                         </Col>
                                     </Row>
                                 </Col>
 
                                 <Col md={7}>
-                                        <Control.input   type="text"  model=".event" id="event" name="event"  size="65" placeholder="Things you have done" value={element.event}
-                                            className="form-control" onChange={ handleInputChange(element.id)}/>
+                                        <Control.input   type="text"  model=".event"  name="event" size="65" placeholder="Things you have done" value={element.event}
+                                            className={"form-control rowsBold eventCol " + 'a' +element.id.toString()} onChange={ handleInputChange(element.id)}/>
                                     </Col>
 
                                 <Col  md={1}>
                                     <Row >
                                         <Col md={5}>
-                                            <Control.select   model=".importance" id="importance" name="importance" defaultValue={element.importance}   className="form-control"
-                                             onChange={ handleInputChange(element.id)} >
+                                            <Control.select   model=".importance"   name="importance" defaultValue={element.importance}    
+                                            className={"form-control rowsBold "  + 'a' +element.id.toString()}  onChange={ handleInputChange(element.id)} >
                                                 <option value={-1}>-1</option>
                                                 <option value={0}>0</option>
                                                 <option value={1}>1</option>
@@ -205,17 +243,23 @@ const EventRow = (props ) => {
                                 </Col>
                              </Row>  
                              </LocalForm  > 
-                ))}
+                )}
+                )}
 
             <div className ="row bottomBtn">
 
                 <Button className="btn-top col-md-2 offset-md-5" type="submit" color="secondary" onClick ={(values) => handleClick(values) }>
                     Add a new event
                 </Button>
-                <Button className="btn-top col-md-1 offset-md-1"   color="secondary" onClick ={() => handleSave() }>
+                <Button className="btn-top col-md-1 offset-md-1"   color="secondary" onClick ={() => handleSave(todayDate) }>
                     Save
                 </Button>
+                <Button className="btn-top col-md-1 offset-md-1"   color="secondary" onClick ={() => purge() }>
+                    Reset
+                </Button>
+   
             </div>
+           
             <Card>
                 <CardHeader className="bg-primary ">Dashboard</CardHeader>
                 <CardBody  >

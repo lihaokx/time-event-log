@@ -56,8 +56,17 @@ const changeDashBoardFunc = (dashboardValue) => {
         }
     })};
 
-export const endChangeNextStart = () => (dispatch) => {
-
+const purgeStateFunc =() => {
+    return(
+       {
+            type: "purgeState",
+            payload: ''
+       }
+        )
+}
+export const purgeState =() => (dispatch) => {
+    dispatch(purgeStateFunc())
+    
 }
 
 
@@ -87,18 +96,29 @@ export const addEventCreator = () => (dispatch) => {
 
 
 
-export const saveRows = (rows) => (dispatch) => {
+
+export const saveRows = (rows, todayDate) => (dispatch) => {
 
     // const bearer = 'Bearer ' + localStorage.getItem('token');
+    // console.log('type of start: ', typeof rows[0].start);
+    // console.log('type of date: ', typeof todayDate);
+    const postRows ={
+        "date": todayDate, 
+        "rows": rows
+    } 
+    const bearer = 'Bearer ' + localStorage.getItem('token');
 
-    return fetch('http://localhost:2020/RowsOfEvents', {
+    return fetch('http://localhost:3000/', {
         method: 'POST',
-        body: JSON.stringify(rows),
+        body: JSON.stringify(postRows),
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+        // credentials: "same-origin"
     })
     .then(response => {
+        console.log("first response: ", response)
         if (response.ok) {
             return response;
         }
@@ -113,6 +133,19 @@ export const saveRows = (rows) => (dispatch) => {
         throw errmess;
     })
     .then(response => response.json())
+    .then(response => {
+        // the initial response converted to a readable response
+        console.log("ifResponseSuccess: ", response)
+        if (response.success) {
+            console.log("response: ", response.status)
+            
+        }
+        else {
+            var error = new Error('Error ' + response.status);
+            error.response = response;
+            throw error;
+        }
+    })
 
     .catch(error => { console.log('Post rows ', error.message);
         alert('Your rows could not be posted\nError: '+ error.message); })

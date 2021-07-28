@@ -62,7 +62,7 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
                 // change next start by this 
                 if(a.id === action.payload.keyId+1){
                     returnValue1.start = action.payload.stop.value;
-
+                    returnValue1.period = diff(returnValue1.start, returnValue1.stop);
                 }
                 return returnValue1;
               
@@ -93,6 +93,9 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
             })
             console.log("array33: ", array33);
             return array33;
+        //purge state, then return the initial value
+        case "purgeState":
+            return RowOfEvent;
 
         default:
             return state;

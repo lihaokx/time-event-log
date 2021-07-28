@@ -5,14 +5,20 @@ import storage from 'redux-persist/lib/storage'
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { rowEventReducer } from './eventRowReducer';
-import {dashBoardReducer} from './dashBoardReducer'
+import {dashBoardReducer} from './dashBoardReducer';
+const expireReducer = require('redux-persist-expire');
 
 const persistConfig = {
     key: 'root',
-    storage,
+    storage: storage,
+    // whitelist: [rowEventReducer]
+    // transforms: [expireReducer('preference', {
+    //      expireSeconds: 5555,
+    //     }), [rowEventReducer, dashBoardReducer] ]
 }
 
-const persistedReducer = persistReducer(persistConfig, combineReducers({
+const persistedReducer = persistReducer( persistConfig, 
+    combineReducers({
     rows: rowEventReducer, 
     dashBoard: dashBoardReducer
 }))
