@@ -4,14 +4,15 @@ const checkIfRowsEmpty = (rows) => {
         function(myResolve, myReject){     
             for (let i = 0; i < rows.length; i++) {
                 for (let [key, value] of Object.entries(rows[i])) {
-                    // console.log(i, ' ', key, ' ', value);
+                    // console.log(i + ' '+ key + ' '+ value);
                     // === is different from ==
                     if (value === ''){
                         var row = i+1
                         myReject(new Error(key+ " in row "+ row + " is empty!" ));
                         break;
                     }    
-                    if(i==rows.length-1 && key =='importance' && value != ''){
+                    if(i==rows.length-1 && key =='importance' && value !== ''){
+                        // console.log("resolve: ", i + ' '+ key + ' '+ value);
                         myResolve("There is no empty values in rows!")
                     }
                 }  

@@ -6,7 +6,7 @@ const checkIfDateEmpty = ( todayDate) => {
                 myReject(new Error("Date is empty!"))
             }
             else{
-                console.log("success");
+                // console.log("Date is not empty");
                 myResolve("Date is not empty.");
             }
         }

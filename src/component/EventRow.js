@@ -1,22 +1,29 @@
  
 import { addEventCreator, addStopValue, addStartValue, saveRows, 
-    addEventValue , addImportanceValue, changeDashBoard, purgeState} from '../reduxReducer/actionCreators';
+    addEventValue , addImportanceValue, changeDashBoard, purgeState, 
+    changeNumRowsCanvas } from '../reduxReducer/actionCreators';
 import { connect } from 'react-redux';
-import { Col , Row,Form,FormGroup, Input, Button,  Card, CardBody, CardHeader, Media } from 'reactstrap';
-
+import { Col , Row, FormGroup, Input, Button, UncontrolledTooltip, Card, CardBody } from 'reactstrap';
+import { PieChart } from 'react-minimal-pie-chart';
 import { Control, LocalForm } from 'react-redux-form';
 import { useEffect, useState} from 'react';
 import  {ConfigureStore} from '../reduxReducer/configureStore';
 import checkIfDateEmpty from "../helperFunc/checkIfDateEmpty";
 import checkIfRowsEmpty from "../helperFunc/checkIfRowsEmpty";
 import dashFunction from '../helperFunc/dashFunction';
+import ChartSvg from './chartSvg';
+import {threeColors} from '../shared/threeColors'
+import { Alert, UncontrolledAlert } from 'reactstrap';
+// import ReactTooltip from 'react-tooltip';
 
 const persistor = ConfigureStore().persistor;
 
 const mapStateToProps = state => {
     return {
       rows: state.rows,
-      dashBoard: state.dashBoard
+      dashBoard: state.dashBoard,
+      saveLoading: state.saveLoading,
+      numRowsCanvas: state.numRowsCanvas
     }
 }
   
@@ -28,8 +35,9 @@ const mapDispatchToProps = dispatch => ({
     addEvent: (value, keyId)=> {dispatch(addEventValue(value, keyId))},
     addImportance: (value, keyId)=> {dispatch(addImportanceValue(value, keyId))},
     changeDashBoard: (dashboardValue) => {dispatch(changeDashBoard(dashboardValue))},
-    saveRows: (rows, todayDate) => {dispatch(saveRows(rows, todayDate))},
-    purgeState: () => {dispatch(purgeState())}
+    saveRows: (rows, todayDate, dashBoard) => {dispatch(saveRows(rows, todayDate, dashBoard))},
+    purgeState: () => {dispatch(purgeState())},
+    changeNumRowsCanvas: (numRowsCanvas) => {dispatch(changeNumRowsCanvas(numRowsCanvas))},
   });
   
 function diff(start, end) {
@@ -39,7 +47,14 @@ function diff(start, end) {
     start = start.split(":");
     end = end.split(":");
     var startDate = new Date(0, 0, 0, start[0], start[1], 0);
-    var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+    var endDate
+    if (parseInt(end[0]) <= 3 && parseInt(start[0]) >= parseInt(end[0])  ){
+         endDate = new Date(0, 0, 1, end[0], end[1], 0);
+    }
+    else{
+         endDate = new Date(0, 0, 0, end[0], end[1], 0);
+    }
+ 
     var diff = endDate.getTime() - startDate.getTime();
     var hours = Math.floor(diff / 1000 / 60 / 60);
     diff -= hours * 1000 * 60 * 60;
@@ -52,11 +67,14 @@ function diff(start, end) {
 
 
 const EventRow = (props ) => {
-    console.log("props: ", props)
+    // console.log("props: ", props)
     // console.log("RowOfEvent: ", RowOfEvent)
+    const [visible, setVisible] = useState(true);
+
+    const onDismiss = () => setVisible(false);
 
     function handleClick(values) {
-        console.log('props: ', props);
+        // console.log('props: ', props);
         // alert('Current State is: ' + JSON.stringify(values));
         props.addEventRow( );
         // event.preventDefault();
@@ -64,13 +82,16 @@ const EventRow = (props ) => {
 
     function handleSave(todayDate){
         // props.saveRows(props.rows, todayDate)
-
+        // console.log("todayDate: ", todayDate); 
         const datePromise = checkIfDateEmpty( todayDate);
         datePromise
-        .then(() =>{return  checkIfRowsEmpty(props.rows )})
-        .then(() =>{props.saveRows(props.rows, todayDate)},
-            (err) => {console.error("Error message: ", err.message);
-            alert(err.message); 
+        .then(() =>{ return   checkIfRowsEmpty(props.rows )})
+        .then(() =>{
+            // console.log("props.rows:...........", props.rows); 
+             props.saveRows(props.rows, todayDate, props.dashBoard)},
+            (err) => {
+                console.error("Error message: ", err.message);
+                alert(err.message); 
             }
         )
     }
@@ -78,23 +99,23 @@ const EventRow = (props ) => {
     function changeBackgrdColor (rows){
         for(let i=0; i<rows.length; i++){
             var currentId = 'a'+i.toString();
-            console.log("rows ", i, " ", rows[i])
+            // console.log("rows ", i, " ", rows[i])
             var currentRow = document.getElementsByClassName(currentId);
 
             switch (rows[i].importance){
                 case 0:
                     for(let i=0; i<currentRow.length; i++){
-                        currentRow[i].style.backgroundColor = '#9df2f5';
+                        currentRow[i].style.backgroundColor = threeColors.color0;
                     }
                     continue;
                 case 1:
                     for(let i=0; i<currentRow.length; i++){
-                        currentRow[i].style.backgroundColor = '#ff9f87';
+                        currentRow[i].style.backgroundColor = threeColors.colorP1;
                     }
                     continue;
                 case -1:
                     for(let i=0; i<currentRow.length; i++){
-                        currentRow[i].style.backgroundColor = '#f0eef3';
+                        currentRow[i].style.backgroundColor = threeColors.colorN1;
                     }
                     continue;
             }
@@ -113,46 +134,51 @@ const EventRow = (props ) => {
       }
 
     
+    //   console.log("props.rows after change importance (outside function): ", props.rows);
 
     // when row.imporatance change, it will change the dashboard function
     // can not put object(array) in the [] of useEffect 
     // the size of dependency can not change. Thus, use join method to join them as a single string
     useEffect(() => {
         dashFunction(props.rows)
-        .then((dashboardValue) => {props.changeDashBoard(dashboardValue)
+        
+        .then((dashboardCanvas) => {props.changeDashBoard(dashboardCanvas.dashboardValue);
+            // console.log("dashboardCanvas.numRowsCanvas.............: ", dashboardCanvas.numRowsCanvas)
+            props.changeNumRowsCanvas(dashboardCanvas.numRowsCanvas)
             return Promise.resolve()
         })
         .then(( )=> changeBackgrdColor(props.rows))
-        console.log("props.rows: ", props.rows);
-    }, [[...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(",")])
+        // console.log("props.rows: ", props.rows);
+    }, [[...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.event).join(","), ...props.rows.map(row => row.importance).join(",")].join(",")])
 
+    // console.log("numRowsCanvas in rows: ", numRowsCanvas)
     
     // useEffect(()=>{
         
     // }, [...props.rows.map(row => row.stop)] )
     
-    console.log("props.rows.map(row => row.period)]: ", [...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(","));
+    // localStorage.clear();
+    // console.log("props.rows.map(row => row.period)]: ", [...props.rows.map(row => row.period).join(","), ...props.rows.map(row => row.importance).join(",")].join(","));
     const [todayDate, setTodayDate] = useState("");
 
     const handleDate = () => (event) =>{
         const target = event.target;
         const value = target.value;
-        const name = target.name;
-        console.log("todayDate: ", name);
-        console.log("value: ", value);
+        // const name = target.name;
+        // console.log("todayDate: ", name);
+        // console.log("value: ", value);
         setTodayDate(value);  
-        console.log("todayDate: ", todayDate);    
+        // console.log("todayDate: ", todayDate);    
     }
-
 
     const  handleInputChange = (keyId) =>(event) =>{
         const target = event.target;
         // const value = target.type === 'select' ? target.checked : target.value;
         const value = target.value
         const name = target.name;
-        console.log("name: ", name)
-        console.log("value: ", value)
-        console.log("keyId: ", keyId)
+        // console.log("name: ", name)
+        // console.log("value: ", value)
+        // console.log("keyId: ", keyId)
         switch (name){
             case  "start"  :
                 props.addStart(value, keyId); 
@@ -165,11 +191,11 @@ const EventRow = (props ) => {
                 props.addEvent(value, keyId);  
                 break;
             case "importance" :
-                console.log("event value: ", value);
+                // console.log("event value: ", value);
                 var valueInt=parseInt(value);
                
                 props.addImportance(valueInt, keyId);                    
-
+                // console.log("props.rows after change importance (inside function): ", props.rows);
                 break;
             // case "period" :
             //     // console.log("event value: ", value);
@@ -179,12 +205,12 @@ const EventRow = (props ) => {
                 return null;
         }
     }
-
+    // console.log("props.rows after change importance (outside function): ", props.rows);
     
     return ( 
-        <div>
-           
-                <h4 className="mt-5">Date of Today</h4>
+        <div>          
+                <h4 className="mt-5" data-tip="hello world" data-for='test'>Date of Today </h4>
+ 
                 <br></br>
                 <div className="row justify-content-center">
                     <FormGroup className="col-3">
@@ -194,12 +220,31 @@ const EventRow = (props ) => {
                 <div className="row justify-content-center header-top">
 
                 <div className="row  col-4 justify-content-center">
-                    <div className=" col-4 ">Start       </div>
-                    <div className=" col-4 ">Stop       </div>
-                    <div className=" col-4 ">Period       </div>
+                <UncontrolledTooltip placement="top" target={"startTool"} hideArrow = {true}>
+                    Moment of start.
+                </UncontrolledTooltip>
+                    <div className=" col-4 " id ='startTool'>Start       </div>
+
+                <UncontrolledTooltip placement="top" target={"stopTool"} hideArrow = {true}>
+                    Moment of stop.
+                </UncontrolledTooltip>
+                    <div className=" col-4 " id ='stopTool'>Stop       </div>
+
+                <UncontrolledTooltip placement="top" target={"periodTool"} hideArrow = {true}>
+                    Time difference between start and stop.
+                </UncontrolledTooltip>
+                    <div className=" col-4 " id ='periodTool'>Period       </div>
+
+
                 </div>
-                    <div className="col-7">Event      </div>
-                    <div className="col-1">Importance  </div>
+                <UncontrolledTooltip placement="top" target={"eventTool"} hideArrow = {true}>
+                    Things you have done during the period.
+                </UncontrolledTooltip>
+                    <div className="col-7"  id ='eventTool'>Event      </div>
+                <UncontrolledTooltip placement="top" target={"importanceTool"} hideArrow = {true}>
+                    Importance level of the event. "1" means very important.<br></br> "0" means normal things.<br></br> "-1" means unrelevant.
+                </UncontrolledTooltip>
+                    <div className="col-1" id ="importanceTool">Importance  </div>
                 </div>
                 {props.rows.map(element => { 
                 return(  
@@ -252,29 +297,50 @@ const EventRow = (props ) => {
                     Add a new event
                 </Button>
                 <Button className="btn-top col-md-1 offset-md-1"   color="secondary" onClick ={() => handleSave(todayDate) }>
-                    Save
+                    Save{console.log(" props.saveLoading: ",  props.saveLoading.ifSaveLoading)}
+                    { props.saveLoading.ifSaveLoading? 
+                        <i className="fa fa-spinner fa-pulse fa-fw"></i>  : null}
                 </Button>
                 <Button className="btn-top col-md-1 offset-md-1"   color="secondary" onClick ={() => purge() }>
                     Reset
                 </Button>
    
             </div>
-           
+            <div className ="row">
+                <h2 className="mb-2">Timeline Dashboard</h2>
+            <ChartSvg numRowsCanvas ={props.numRowsCanvas}/>
+           </div>
             <Card>
-                <CardHeader className="bg-primary ">Dashboard</CardHeader>
+                
                 <CardBody  >
                     <dl className="row p-1 dashboardTable">
-                        <dt className="col-6"> </dt>
-                        <dd className="col-6">Time consumed</dd>
-                        <dt className="col-6">Importance of 1: </dt>
-                        <dd className="col-6 dsb">{props.dashBoard.importanceP1}</dd>
-                        <dt className="col-6">Importance of 0: </dt>
-                        <dd className="col-6 dsb">{props.dashBoard.importance0}</dd>
-                        <dt className="col-6">Importance of -1: </dt>
-                        <dd className="col-6 dsb">{props.dashBoard.importanceN1}</dd>
-                        <dt className="col-6">Total:</dt>
-                        <dd className="col-6 dsb">{props.dashBoard.total}</dd>
+                        <dt className="col-3">Importance of 1:  </dt>
+                        <dt className="col-3">Importance of 0: </dt>
+                        <dt className="col-3">Importance of -1: </dt>
+                        <dd className="col-3 dsb">Total: </dd>
+                        <dt className="col-3"> {props.dashBoard.importanceP1}</dt>
+                        <dt className="col-3">{props.dashBoard.importance0}</dt>
+                        <dt className="col-3"> {props.dashBoard.importanceN1} </dt>
+                        <dd className="col-3 dsb">{props.dashBoard.total}</dd>
+
                     </dl>
+                    <div className='row justify-content-center chartCss'>
+                        <div className='col-md-5'>
+                        <PieChart  
+                        data={[
+                            { title: props.dashBoard.importanceP1, value: props.dashBoard.percent.importanceP1, color: threeColors.colorP1 },
+                            { title: props.dashBoard.importance0, value: props.dashBoard.percent.importance0, color: threeColors.color0 },
+                            { title: props.dashBoard.importanceN1, value: props.dashBoard.percent.importanceN1, color: threeColors.colorN1 },
+                        ]}
+                        label={({ dataEntry }) => `${ Math.round(dataEntry.percentage)} %`}
+                        labelPosition={110}
+                        paddingAngle={0.1}
+                        animate={true}
+                        radius={30}
+                         
+                        />
+                        </div>
+                    </div>
                 </CardBody>
             </Card>
         </div>
@@ -282,4 +348,5 @@ const EventRow = (props ) => {
      );
 }
  
+
 export default  connect(mapStateToProps, mapDispatchToProps)(EventRow);

@@ -1,5 +1,5 @@
 import React from 'react';
- 
+import { UncontrolledAlert } from 'reactstrap';
 import {Jumbotron} from 'reactstrap';
 
 function Footer() {
@@ -19,6 +19,7 @@ function Footer() {
                                 </div>
                             </a>
                     </div>
+ 
                     <div className="col-xs-12 col-md justify-content-center">                     
                         <a className="row justify-content-center"   href="mailto:lihaokx@gmail.com">
                             <div className="col-xs-5 col-md-2 ">

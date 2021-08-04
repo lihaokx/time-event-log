@@ -6,6 +6,9 @@ import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import { rowEventReducer } from './eventRowReducer';
 import {dashBoardReducer} from './dashBoardReducer';
+import { saveLoadingReducer } from './saveLoadingReducer';
+import {numRowsCanvasReducer} from './numRowsCanvasReducer';
+ 
 const expireReducer = require('redux-persist-expire');
 
 const persistConfig = {
@@ -20,7 +23,9 @@ const persistConfig = {
 const persistedReducer = persistReducer( persistConfig, 
     combineReducers({
     rows: rowEventReducer, 
-    dashBoard: dashBoardReducer
+    dashBoard: dashBoardReducer,
+    saveLoading: saveLoadingReducer,
+    numRowsCanvas: numRowsCanvasReducer
 }))
 
 export const ConfigureStore = () => {

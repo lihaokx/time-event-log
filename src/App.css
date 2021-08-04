@@ -18,7 +18,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;   
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -67,7 +67,7 @@ a{ text-decoration:none;
 
 .top-buffer { margin-top:50px; }
 
-.form-top-buffer { margin-top:15px; }
+.form-top-buffer { margin-top:0.1em; }
 
 .btn-top{margin-top:15px;
   margin-bottom:50px;
@@ -83,10 +83,11 @@ a{ text-decoration:none;
 }
 .dashboardTable{
   color: black;
+  font-size: 1.2rem;
 }
 
 .loginBtn{
-  color: white;
+  color: #d6f5cf;
 }
 
 .dsb{
@@ -100,3 +101,18 @@ a{ text-decoration:none;
 .rowsBold{
   font-weight: bold;
 }
+
+.chartCss{
+  font-size: 0.3rem;
+  /* padding: 0.5rem; */
+  margin-top: -3.5rem;
+  
+}
+.svgB{
+  background-color: aliceblue;
+  /* width: 80rem; */
+
+}
+ 
+
+ 

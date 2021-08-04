@@ -1,4 +1,7 @@
+import { baseUrl } from '../shared/url';
 
+import fetchWithTimeOut from '../helperFunc/fetchWithTimeOut';
+ 
  const addEventCreatorFunc = () => {
     return({
         type: "addEventRow",
@@ -56,6 +59,14 @@ const changeDashBoardFunc = (dashboardValue) => {
         }
     })};
 
+const changeNumRowsCanvasFunc = (numRowsCanvas) => {
+    return({
+        type: "changeNumRowsCanvas",
+        payload: {
+            numRowsCanvas: numRowsCanvas
+        }
+})};
+
 const purgeStateFunc =() => {
     return(
        {
@@ -69,6 +80,9 @@ export const purgeState =() => (dispatch) => {
     
 }
 
+export const changeNumRowsCanvas= (numRowsCanvas) => (dispatch) => {
+    dispatch( changeNumRowsCanvasFunc(numRowsCanvas) );
+}
 
 export const changeDashBoard = (dashboardValue) => (dispatch) => {
     dispatch( changeDashBoardFunc(dashboardValue) );
@@ -94,51 +108,54 @@ export const addEventCreator = () => (dispatch) => {
     dispatch(addEventCreatorFunc());
 }
 
+export const saveIsLoadingFunc = () => {
+    return {
+        type: "isLoading",
+        payload:''
+    }
+}
+
+export const saveIsNotLoadingFunc = () => {
+    return {
+        type: "notLoading",
+        payload:''
+    }
+}
 
 
 
-export const saveRows = (rows, todayDate) => (dispatch) => {
-
+export const saveRows = (rows, todayDate, dashBoard) => (dispatch) => {
+ 
     // const bearer = 'Bearer ' + localStorage.getItem('token');
     // console.log('type of start: ', typeof rows[0].start);
-    // console.log('type of date: ', typeof todayDate);
+    // console.log('type of date: ',   todayDate);
     const postRows ={
         "date": todayDate, 
-        "rows": rows
+        "rows": rows,
+        "dashBoard": dashBoard
     } 
+    // console.log("postRows(before post): ", postRows)
+    dispatch(saveIsLoadingFunc())
     const bearer = 'Bearer ' + localStorage.getItem('token');
-
-    return fetch('http://localhost:3000/', {
+    // console.log('bearer: ',   bearer);
+    return fetchWithTimeOut(baseUrl, {
         method: 'POST',
         body: JSON.stringify(postRows),
         headers: {
             'Content-Type': 'application/json',
             'Authorization': bearer
-        },
+        }
         // credentials: "same-origin"
-    })
-    .then(response => {
-        console.log("first response: ", response)
-        if (response.ok) {
-            return response;
-        }
-        else {
-            var error = new Error('Error ' + response.status + ': ' + response.statusText);
-            error.response = response;
-            throw error;
-        }
-    },
-    error => {
-        var errmess = new Error(error.message);
-        throw errmess;
-    })
-    .then(response => response.json())
+    }, 10000)
+    .then(response => response.json(), error => {throw error} )
     .then(response => {
         // the initial response converted to a readable response
-        console.log("ifResponseSuccess: ", response)
+        // console.log("ifResponseSuccess: ", response)
         if (response.success) {
-            console.log("response: ", response.status)
-            
+            // console.log("response: ", response.status)
+            // alert(response.status)
+ 
+            dispatch(saveIsNotLoadingFunc())
         }
         else {
             var error = new Error('Error ' + response.status);
@@ -146,8 +163,13 @@ export const saveRows = (rows, todayDate) => (dispatch) => {
             throw error;
         }
     })
-
-    .catch(error => { console.log('Post rows ', error.message);
-        alert('Your rows could not be posted\nError: '+ error.message); })
+    .catch(error => { 
+        // console.log('Post rows ', error);
+        dispatch(saveIsNotLoadingFunc())
+ 
+        alert('Your rows could not be posted\n '+ error); })
 }
+
+
+
 

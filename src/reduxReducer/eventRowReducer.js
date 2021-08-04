@@ -6,11 +6,16 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
     function diff(start, end) {
         // start = document.getElementById("start").value; //to update time value in each input bar
         // end = document.getElementById("end").value; //to update time value in each input bar
-        console.log("state:", state);
+        // console.log("state:", state);
         start = start.split(":");
         end = end.split(":");
         var startDate = new Date(0, 0, 0, start[0], start[1], 0);
-        var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+        if (parseInt(end[0]) <= 3 && parseInt(start[0]) >= parseInt(end[0])  ){
+            var endDate = new Date(0, 0, 1, end[0], end[1], 0);
+        }
+        else{
+            var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+        }
         var diff = endDate.getTime() - startDate.getTime();
         var hours = Math.floor(diff / 1000 / 60 / 60);
         diff -= hours * 1000 * 60 * 60;
@@ -28,8 +33,8 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
             var hour = (today.getHours()<10?'0':'') + today.getHours() + ":" ;
             var min = (today.getMinutes()<10?'0':'') + today.getMinutes();
             var time = hour+min;
-            console.log("min time: ", today.getMinutes()<10?'0':''  );            
-            console.log("current time: ", time);
+            // console.log("min time: ", today.getMinutes()<10?'0':''  );            
+            // console.log("current time: ", time);
             rows[rows.length-1].stop = time;
             rows[rows.length-1].period = diff(rows[rows.length-1].start, rows[rows.length-1].stop);
             newRow.id = state.length;
@@ -78,6 +83,7 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
                 }
                 return returnValue2;
             })
+            // console.log("new array: ", array22)
             return array22;
 
         case  "addImportanceValue":
@@ -86,12 +92,12 @@ export const  rowEventReducer = (state=RowOfEvent, action)=> {
                 var returnValue3 = {...a};
                 if (a.id === action.payload.keyId ) {
                 returnValue3.importance = action.payload.importance.value;
-                console.log("returnValue3: ", returnValue3);
+                // console.log("returnValue3: ", returnValue3);
             }
                 
                 return returnValue3;
             })
-            console.log("array33: ", array33);
+            // console.log("array33: ", array33);
             return array33;
         //purge state, then return the initial value
         case "purgeState":

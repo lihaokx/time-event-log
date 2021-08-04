@@ -13,20 +13,20 @@ const persistor = ConfigureStore().persistor;
 function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <div className="App">
-          <div className="App-header">
-            <div className="container">
-              <Header />
-              <br></br>
+        <PersistGate loading={null} persistor={persistor}>
+            <div className="App">
+              <div className="App-header"> 
+                <div className="container">
+                  <Header />
+                  <br></br>
  
-              <EventRow/>
+                  <EventRow/>
               
-            </div>
-          </div>
+                </div>  
+            </div>  
           <Footer/>
         </div>
-      </PersistGate>
+        </PersistGate>
     </Provider>
   );
 }
