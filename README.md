@@ -23,10 +23,11 @@ This project website is hosted [here](http://haoliweb.com/time-event-log/).
 ## Demo
 ### Demo 1 Sign up and log in.
 ![Demo](./src/gif/login.gif "Demo")
-### Demo 2
+### Demo 2 Main page and data visualization
 ![Demo](./src/gif/eventRows.gif "Demo")
-### Demo 3
-### Demo 4
+### Demo 3 MongoDB database
+![Demo](./src/gif/mongodb.gif "Demo")
+ 
 
 
 ## Available Scripts
