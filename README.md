@@ -1,6 +1,33 @@
-# Getting Started with Create React App
+# [Time-event-log Application](http://haoliweb.com/time-event-log/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application is a time management tool used to improve working efficiency. A registered user can use this App to record time and events of his or her daily. Thus, people can know exactly how their time are spend on everyday. In addition, some visual graphes can help to know whether a day is productive or not.
+
+I originated this idea at the beginning of this pandemic. Students and employees are working at home without face-to-face supervision. In this case, people's working efficiency may suffer because of distraction on the Internet. Thus, I thought I could develop a tool to help people to monitor their time. After several months consistent efforts, I put this idea into product.
+
+This project website is hosted [here](http://haoliweb.com/time-event-log/).
+
+## Technologies
+1. Front-end: React, Redux, Reactstrap.
+2. Back-end: Node.js, Express.
+3. User authentication: JSON Web Token.
+4. Database: MongoDB.
+5. Deployment: Backend deployed to AWS Elastic Beanstalk. 
+
+## Key features:
+1. Data visualization and timeline.
+2. Local store data and reset function.
+3. Save data to MongoDB database by press save button.
+4. User registration and login.
+5. Form validation.
+
+## Demo
+### Demo 1 Sign up and log in.
+![Demo](./src/gif/login.gif "Demo")
+### Demo 2
+![Demo](./src/gif/eventRows.gif "Demo")
+### Demo 3
+### Demo 4
+
 
 ## Available Scripts
 
@@ -26,45 +53,4 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ 
