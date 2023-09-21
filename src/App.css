@@ -115,4 +115,12 @@ a{ text-decoration:none;
 }
  
 
+
+.svgB{
+  border-radius: 5px;
+  border-width: 4px;
+  border-color: red;
+
+}
+
  

@@ -1,10 +1,8 @@
-# [Time-event-log Application](http://haoliweb.com/time-event-log/)
+# Time-event-log Application
 
 This application is a time management tool used to improve working efficiency. A registered user can use this App to record time and events of his or her daily. Thus, people can know exactly how their time are spend on everyday. In addition, some visual graphes can help to know whether a day is productive or not.
 
 I originated this idea at the beginning of this pandemic. Students and employees are working at home without face-to-face supervision. In this case, people's working efficiency may suffer because of distraction on the Internet. Thus, I thought I could develop a tool to help people to monitor their time. After several months consistent efforts, I put this idea into product.
-
-This project website is hosted [here](http://haoliweb.com/time-event-log/).
 
 ## Technologies
 1. Front-end: React, Redux, Reactstrap.

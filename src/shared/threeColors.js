@@ -5,3 +5,6 @@ export const threeColors =
     colorN1: '#d6f5cf',
     color0:  '#9df2f5'
 }
+ 
+
+
