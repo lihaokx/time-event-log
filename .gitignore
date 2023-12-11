@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/time-event-log-ec2-instance.pem
 /.pnp
 .pnp.js
 

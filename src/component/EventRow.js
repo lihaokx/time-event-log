@@ -13,7 +13,6 @@ import checkIfRowsEmpty from "../helperFunc/checkIfRowsEmpty";
 import dashFunction from '../helperFunc/dashFunction';
 import ChartSvg from './chartSvg';
 import {threeColors} from '../shared/threeColors'
-import { Alert, UncontrolledAlert } from 'reactstrap';
 // import ReactTooltip from 'react-tooltip';
 
 const persistor = ConfigureStore().persistor;
@@ -67,8 +66,6 @@ function diff(start, end) {
 
 
 const EventRow = (props ) => {
-    // console.log("props: ", props)
-    // console.log("RowOfEvent: ", RowOfEvent)
     const [visible, setVisible] = useState(true);
 
     const onDismiss = () => setVisible(false);

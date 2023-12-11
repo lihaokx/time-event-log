@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Tooltip, UncontrolledTooltip } from "reactstrap";
+import {  Tooltip } from "reactstrap";
 import ReactTooltip from 'react-tooltip'; 
 
 const TooltipItem = props => {

@@ -138,7 +138,7 @@ export const saveRows = (rows, todayDate, dashBoard) => (dispatch) => {
     dispatch(saveIsLoadingFunc())
     const bearer = 'Bearer ' + localStorage.getItem('token');
     // console.log('bearer: ',   bearer);
-    return fetchWithTimeOut(baseUrl, {
+    return fetchWithTimeOut(baseUrl + "rows/update", {
         method: 'POST',
         body: JSON.stringify(postRows),
         headers: {

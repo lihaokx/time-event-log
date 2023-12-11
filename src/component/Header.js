@@ -1,5 +1,5 @@
  
-import { Button,  Label,  Modal,FormText,Form, FormFeedback, FormGroup,Input,  ModalHeader, ModalBody} from 'reactstrap';
+import { Button,  Label,  Modal, Form, FormFeedback, FormGroup,Input,  ModalHeader, ModalBody} from 'reactstrap';
 import React, { useState , useEffect}  from 'react';
 // import { Control, Form, Errors } from 'react-redux-form';
 import fetchWithTimeOut from '../helperFunc/fetchWithTimeOut';
@@ -9,12 +9,10 @@ import { baseUrl } from '../shared/url';
 const Header = () => {
     const [isModalOpen, setisModalOpen] = useState(false);
     const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
-    const [isAuth, setIsAuth] = useState(localStorage.getItem('isAuth')==null?  false :  localStorage.getItem('isAuth'));
-    // console.log("localStorage.getItem('userPassword'): ", localStorage.getItem('userPassword') );
-    // console.log("localStorage.getItem('userPassword'): ", typeof localStorage.getItem('userPassword'));
+    const [isAuth, setIsAuth] = useState(localStorage.getItem('isAuth')===null?  false :  localStorage.getItem('isAuth'));
     // var curname = localStorage.getItem('userPassword') == null?  '' :    JSON.parse(localStorage.getItem('userPassword'))
     // console.log("curname: ", curname);
-    const [username, setUsername] = useState(localStorage.getItem('userPassword') == null?  '' :  JSON.parse(localStorage.getItem('userPassword')).username);
+    const [username, setUsername] = useState(localStorage.getItem('userPassword') === null?  '' :  JSON.parse(localStorage.getItem('userPassword')).username);
     const [userNameState, setUserNameState] = useState('')
     const [loading, setLoading] = useState({
         login: false,
@@ -63,7 +61,6 @@ const Header = () => {
                 (userPinSignup) => { return { ...userPinSignup, passwordState: {...userPinSignup.passwordState, username: 'yes' }
             }});
         }
-        // console.log("userPinSignup: ", userPinSignup)
     }
 
     function validPassword(event){
@@ -113,16 +110,14 @@ const Header = () => {
         }
     }, [userPinSignup.password1,  userPinSignup.password2 ])
 
-    // console.log("userPinSignup: ", userPinSignup)
     function handleSignup(event){
         // toggleSignUpModal();
-        // console.log("event.target: ", event.target.username.value)
         setLoading(
             (loading) => {return {...loading, signup:true}}
         )
         event.preventDefault();
 
-        if(userPinSignup.passwordState.password1 == 'yes' && userPinSignup.passwordState.password2 == 'yes' && userPinSignup.passwordState.username == 'yes'){
+        if(userPinSignup.passwordState.password1 === 'yes' && userPinSignup.passwordState.password2 === 'yes' && userPinSignup.passwordState.username === 'yes'){
             toggleSignUpModal()
             var userPassword ={
                 "username": userPinSignup.username,
@@ -263,8 +258,8 @@ const Header = () => {
                             <Label htmlFor="username">Username {userPinSignup.username}</Label>
                             <Input type="text" id="username" name="username"
                              placeholder="Your username"
-                             valid={userPinSignup.passwordState.username == "yes"}
-                             invalid={ userPinSignup.passwordState.username == "no"}
+                             valid={userPinSignup.passwordState.username === "yes"}
+                             invalid={ userPinSignup.passwordState.username === "no"}
                              onChange={(e) => {
                                validUsername(e);
                              }}  />
@@ -276,8 +271,8 @@ const Header = () => {
                         <FormGroup>
                             <Label htmlFor="password1">Password {userPinSignup.password1} </Label>
                             <Input type="password" id="password1" name="password1"
-                             valid={userPinSignup.passwordState.password1 == "yes"}
-                             invalid={ userPinSignup.passwordState.password1 == "no"}
+                             valid={userPinSignup.passwordState.password1 === "yes"}
+                             invalid={ userPinSignup.passwordState.password1 === "no"}
                              onChange={(e) => {
                                validPassword(e);
                              }}      />
@@ -289,8 +284,8 @@ const Header = () => {
                         <FormGroup>
                             <Label htmlFor="password2">Confirm Password {userPinSignup.password2}</Label>
                             <Input type="password" id="password2" name="password2"
-                            valid={userPinSignup.passwordState.password2 == "yes"}
-                            invalid={ userPinSignup.passwordState.password2 == "no"}
+                            valid={userPinSignup.passwordState.password2 === "yes"}
+                            invalid={ userPinSignup.passwordState.password2 === "no"}
                             onChange={(e) => {
                             validPassword(e);
                             }} />

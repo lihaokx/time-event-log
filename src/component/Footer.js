@@ -1,5 +1,4 @@
 import React from 'react';
-import { UncontrolledAlert } from 'reactstrap';
 import {Jumbotron} from 'reactstrap';
 
 function Footer() {
