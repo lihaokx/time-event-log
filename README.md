@@ -1,4 +1,4 @@
-# Time-event-log Application
+# Time-event-log Application <http://3.90.29.83/>
 
 This application is a time management tool used to improve working efficiency. A registered user can use this App to record time and events of his or her daily. Thus, people can know exactly how their time are spend on everyday. In addition, some visual graphes can help to know whether a day is productive or not.
 
@@ -47,6 +47,7 @@ The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
 #### Diagram of this app
+
 ![](diagram-time-event-log.png)
 
 ### How to use it and deploy it to AWS EC2
@@ -70,6 +71,7 @@ You will also see any lint errors in the console.
 ![Alt text](image.png)
 
 #### Common docker command
+
 1. Build an image
    `docker build -t image-tag-name .`
 2. Show all images
@@ -78,13 +80,14 @@ You will also see any lint errors in the console.
    `docker rmi image-id-or-name`
 4. Remove a container
    `docker rm container-id`
-5. Show all containers 
+5. Show all containers
    `docker ps`
 6. Docker compose up and down
    - `docker compose up --build -d` (in the directory of compose.yaml)
    - `docker compose down`
 
 #### NGINX command(add sudo in ec2)
+
 1. NGINX status
    `systemctl status nginx`
 2. Restart NGINX
